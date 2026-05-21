@@ -231,6 +231,9 @@
   }
   .video-wrapper video { width: 100%; display: block; }
 
+  /* ── Fashion ── */
+  .fashion-grid .img-wrap { aspect-ratio: 3/4; }
+
   /* ── Contact ── */
   .contact-links { display: flex; gap: 3rem; }
   .contact-links a {
@@ -273,6 +276,8 @@
   <a href="#hero">首页</a>
   <a href="#projects">项目</a>
   <a href="#gallery">作品</a>
+  <a href="#gallery">AI 作品</a>
+  <a href="#fashion">服装设计</a>
   <a href="#video">视频</a>
   <a href="#contact">联系</a>
 </nav>
@@ -346,6 +351,20 @@
   <div class="section-title reveal">Seedance 创作</div>
   <div class="video-wrapper reveal">
     <video src="assets/seedance-video.mp4" controls poster="assets/video-poster.png"></video>
+  </div>
+</section>
+
+<!-- Fashion -->
+<section id="fashion">
+  <div class="section-label reveal">Fashion Design</div>
+  <div class="section-title reveal">服装设计</div>
+  <div class="gallery-grid fashion-grid reveal">
+    <div class="img-wrap" onclick="openLightbox(this.querySelector('img').src)"><img src="assets/fashion/3887a1069e574d6fda82e81e8aa67620.jpg" alt="服装设计 1"></div>
+    <div class="img-wrap" onclick="openLightbox(this.querySelector('img').src)"><img src="assets/fashion/47a09a84f66ee1a013ecbd0bd79e13d7.jpg" alt="服装设计 2"></div>
+    <div class="img-wrap" onclick="openLightbox(this.querySelector('img').src)"><img src="assets/fashion/97e9990835a35ec422dc123c45565da2.jpg" alt="服装设计 3"></div>
+    <div class="img-wrap" onclick="openLightbox(this.querySelector('img').src)"><img src="assets/fashion/9d5edcaaaa616420e9c9394979ea5d19.jpg" alt="服装设计 4"></div>
+    <div class="img-wrap" onclick="openLightbox(this.querySelector('img').src)"><img src="assets/fashion/Gemini_Generated_Image_c9g1fc9g1fc9g1fc.png" alt="服装设计 5"></div>
+    <div class="img-wrap" onclick="openLightbox(this.querySelector('img').src)"><img src="assets/fashion/Gemini_Generated_Image_n4yey3n4yey3n4ye.png" alt="服装设计 6"></div>
   </div>
 </section>
 
