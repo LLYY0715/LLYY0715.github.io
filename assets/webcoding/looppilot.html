@@ -1,0 +1,1077 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LoopPilot 二手交易智能运营台</title>
+  <style>
+    :root {
+      --bg: #f4f6f8;
+      --panel: #ffffff;
+      --ink: #18202a;
+      --muted: #6f7a88;
+      --line: #e4e9ef;
+      --soft: #f8fafc;
+      --brand: #15b78f;
+      --brand-deep: #087864;
+      --brand-soft: #e8fbf6;
+      --blue: #356bff;
+      --blue-soft: #edf3ff;
+      --amber: #ffb020;
+      --amber-soft: #fff6df;
+      --red: #ef5a5a;
+      --red-soft: #fff1f1;
+      --shadow: 0 18px 45px rgba(24, 32, 42, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(21, 183, 143, 0.14), transparent 32%),
+        linear-gradient(180deg, #fbfcfd 0%, var(--bg) 46%);
+      font-family: Inter, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+    }
+
+    .shell {
+      display: grid;
+      grid-template-columns: 238px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    .rail {
+      padding: 24px 18px;
+      border-right: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.76);
+      backdrop-filter: blur(18px);
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 4px 6px;
+    }
+
+    .mark {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      background:
+        linear-gradient(135deg, rgba(21, 183, 143, 0.95), rgba(53, 107, 255, 0.9));
+      box-shadow: 0 12px 24px rgba(21, 183, 143, 0.28);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mark::before,
+    .mark::after {
+      content: "";
+      position: absolute;
+      border: 2px solid rgba(255, 255, 255, 0.76);
+      border-radius: 999px;
+    }
+
+    .mark::before {
+      width: 24px;
+      height: 24px;
+      left: 11px;
+      top: 11px;
+    }
+
+    .mark::after {
+      width: 7px;
+      height: 7px;
+      right: 9px;
+      top: 10px;
+      background: #fff;
+      box-shadow:
+        -22px 21px 0 -1px rgba(255, 255, 255, 0.94),
+        -8px 12px 0 -2px rgba(255, 255, 255, 0.9);
+    }
+
+    .brand-name {
+      font-size: 17px;
+      line-height: 1.1;
+      font-weight: 850;
+    }
+
+    .brand-sub {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .nav-group {
+      display: grid;
+      gap: 6px;
+    }
+
+    .nav-title {
+      padding: 0 10px 6px;
+      color: #99a3af;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 12px;
+      border-radius: 8px;
+      color: #566171;
+      font-size: 14px;
+      font-weight: 650;
+    }
+
+    .nav-item.active {
+      color: var(--brand-deep);
+      background: var(--brand-soft);
+    }
+
+    .nav-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 7px;
+      display: grid;
+      place-items: center;
+      background: var(--soft);
+      color: inherit;
+      font-size: 12px;
+      border: 1px solid var(--line);
+    }
+
+    .nav-item.active .nav-icon {
+      background: #fff;
+      border-color: rgba(21, 183, 143, 0.25);
+    }
+
+    .rail-card {
+      margin-top: auto;
+      padding: 14px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.58;
+    }
+
+    .rail-card strong {
+      display: block;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+
+    .main {
+      padding: 28px;
+      min-width: 0;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) 360px;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .hero-main,
+    .hero-side,
+    .card {
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: var(--shadow);
+      border-radius: 8px;
+    }
+
+    .hero-main {
+      padding: 28px;
+      min-height: 202px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hero-main::after {
+      content: "";
+      position: absolute;
+      width: 230px;
+      height: 230px;
+      right: -62px;
+      top: -76px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle, rgba(21, 183, 143, 0.2), transparent 58%);
+      pointer-events: none;
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: max-content;
+      padding: 7px 11px;
+      border-radius: 999px;
+      color: var(--brand-deep);
+      background: var(--brand-soft);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    h1 {
+      margin: 18px 0 8px;
+      font-size: 32px;
+      letter-spacing: 0;
+      line-height: 1.18;
+    }
+
+    .lead {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 740px;
+      font-size: 14px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 22px;
+    }
+
+    .btn {
+      height: 40px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #fff;
+      padding: 0 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 760;
+      color: var(--ink);
+    }
+
+    .btn.primary {
+      background: var(--ink);
+      color: #fff;
+      border-color: var(--ink);
+    }
+
+    .hero-side {
+      padding: 18px;
+    }
+
+    .side-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .side-title {
+      font-weight: 850;
+    }
+
+    .status {
+      color: var(--brand-deep);
+      background: var(--brand-soft);
+      padding: 5px 9px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .summary-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .summary-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      align-items: center;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft);
+    }
+
+    .summary-item span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .summary-item strong {
+      font-size: 20px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      padding: 18px;
+      min-width: 0;
+    }
+
+    .span-3 { grid-column: span 3; }
+    .span-4 { grid-column: span 4; }
+    .span-5 { grid-column: span 5; }
+    .span-7 { grid-column: span 7; }
+    .span-8 { grid-column: span 8; }
+    .span-12 { grid-column: span 12; }
+
+    .metric {
+      min-height: 132px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .label {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .value {
+      margin-top: 10px;
+      font-size: 30px;
+      line-height: 1;
+      font-weight: 900;
+    }
+
+    .hint {
+      margin-top: 10px;
+      color: var(--brand-deep);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 880;
+      line-height: 1.25;
+    }
+
+    .section-desc {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 0 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .pill.green {
+      background: var(--brand-soft);
+      color: var(--brand-deep);
+    }
+
+    .pill.blue {
+      background: var(--blue-soft);
+      color: var(--blue);
+    }
+
+    .pill.amber {
+      background: var(--amber-soft);
+      color: #9b6500;
+    }
+
+    .radar-card {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 210px;
+      gap: 18px;
+    }
+
+    .chart-box {
+      min-height: 280px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background:
+        linear-gradient(to bottom, transparent 24%, #e9edf3 25%, transparent 26%),
+        linear-gradient(to bottom, transparent 49%, #e9edf3 50%, transparent 51%),
+        linear-gradient(to bottom, transparent 74%, #e9edf3 75%, transparent 76%),
+        #fff;
+      position: relative;
+      padding: 22px 20px 36px;
+      overflow: hidden;
+    }
+
+    .chart-svg {
+      width: 100%;
+      height: 210px;
+      display: block;
+      overflow: visible;
+    }
+
+    .axis {
+      position: absolute;
+      left: 20px;
+      right: 20px;
+      bottom: 13px;
+      display: flex;
+      justify-content: space-between;
+      color: #9aa4b2;
+      font-size: 11px;
+    }
+
+    .legend {
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      display: flex;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend i {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .mini-stack {
+      display: grid;
+      gap: 12px;
+    }
+
+    .mini-card {
+      padding: 14px;
+      border: 1px solid var(--line);
+      background: var(--soft);
+      border-radius: 8px;
+    }
+
+    .mini-card strong {
+      display: block;
+      margin: 6px 0;
+      font-size: 18px;
+    }
+
+    .mini-card span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .opportunity-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .product-card {
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      display: grid;
+      gap: 12px;
+    }
+
+    .product-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .product-name {
+      font-weight: 850;
+      line-height: 1.35;
+    }
+
+    .score {
+      font-size: 12px;
+      color: var(--brand-deep);
+      background: var(--brand-soft);
+      padding: 5px 8px;
+      border-radius: 999px;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .meter {
+      height: 7px;
+      border-radius: 999px;
+      background: #edf0f4;
+      overflow: hidden;
+    }
+
+    .meter span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--brand), var(--blue));
+    }
+
+    .product-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .ai-box,
+    .rule-box {
+      min-height: 156px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 15px;
+    }
+
+    .box-title {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .ai-copy {
+      font-size: 17px;
+      line-height: 1.6;
+      font-weight: 850;
+    }
+
+    .rule-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .rule {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 10px;
+      align-items: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .rule-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--brand);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th {
+      color: var(--muted);
+      font-weight: 800;
+      text-align: left;
+      padding: 0 0 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    td {
+      padding: 15px 0;
+      border-bottom: 1px solid var(--line);
+      vertical-align: middle;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .item-name {
+      font-weight: 820;
+      margin-bottom: 5px;
+    }
+
+    .item-sub {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .workflow {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .step {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 16px;
+    }
+
+    .step-no {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      background: var(--ink);
+      font-size: 13px;
+      font-weight: 900;
+      margin-bottom: 14px;
+    }
+
+    .step strong {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .step p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.65;
+    }
+
+    @media (max-width: 1180px) {
+      .shell {
+        grid-template-columns: 1fr;
+      }
+
+      .rail {
+        position: static;
+        flex-direction: row;
+        align-items: center;
+        overflow-x: auto;
+      }
+
+      .nav-group {
+        display: flex;
+        min-width: max-content;
+      }
+
+      .nav-title,
+      .rail-card {
+        display: none;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .span-3,
+      .span-4,
+      .span-5,
+      .span-7,
+      .span-8 {
+        grid-column: span 12;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .main {
+        padding: 18px;
+      }
+
+      .hero-main {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 25px;
+      }
+
+      .radar-card,
+      .opportunity-grid,
+      .split,
+      .workflow {
+        grid-template-columns: 1fr;
+      }
+
+      .card.metric {
+        grid-column: span 12;
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+      }
+
+      table {
+        min-width: 720px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="rail">
+      <div class="brand">
+        <div class="mark" aria-hidden="true"></div>
+        <div>
+          <div class="brand-name">LoopPilot</div>
+          <div class="brand-sub">二手交易智能运营台</div>
+        </div>
+      </div>
+
+      <nav class="nav-group" aria-label="主要模块">
+        <div class="nav-title">工作台</div>
+        <div class="nav-item active"><span class="nav-icon">01</span>总览</div>
+        <div class="nav-item"><span class="nav-icon">02</span>需求雷达</div>
+        <div class="nav-item"><span class="nav-icon">03</span>上架助手</div>
+        <div class="nav-item"><span class="nav-icon">04</span>商品策略</div>
+        <div class="nav-item"><span class="nav-icon">05</span>买家洞察</div>
+      </nav>
+
+      <div class="rail-card">
+        <strong>作品集展示说明</strong>
+        当前为静态样板，采用模拟数据。后续可扩展为 Next.js 项目，接入授权接口、CSV 数据源和 AI 文案模型。
+      </div>
+    </aside>
+
+    <main class="main">
+      <section class="hero">
+        <div class="hero-main">
+          <div>
+            <div class="kicker">AI Copilot for Resale Operation</div>
+            <h1>面向闲鱼卖家的智能运营决策中台</h1>
+            <p class="lead">
+              将市场需求监测、商品上架策略、价格建议、买家意图分析和上下架审核拆成清晰模块，让运营动作从“凭经验”变成“有数据、有建议、可追踪”。
+            </p>
+          </div>
+          <div class="hero-actions">
+            <div class="btn primary">生成今日运营方案</div>
+            <div class="btn">查看需求趋势</div>
+            <div class="btn">导入商品数据</div>
+          </div>
+        </div>
+
+        <aside class="hero-side">
+          <div class="side-head">
+            <div class="side-title">今日运营摘要</div>
+            <div class="status">已同步</div>
+          </div>
+          <div class="summary-list">
+            <div class="summary-item">
+              <div><span>机会商品</span><strong>18</strong></div>
+              <span>3 个高优先级</span>
+            </div>
+            <div class="summary-item">
+              <div><span>待审核动作</span><strong>26</strong></div>
+              <span>降价 / 下架 / 置顶</span>
+            </div>
+            <div class="summary-item">
+              <div><span>买家高频诉求</span><strong>成色</strong></div>
+              <span>占咨询 42%</span>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="grid">
+        <article class="card metric span-3">
+          <div>
+            <div class="label">市场热度指数</div>
+            <div class="value">91</div>
+          </div>
+          <div class="hint">相机、露营、键盘类目升温</div>
+        </article>
+
+        <article class="card metric span-3">
+          <div>
+            <div class="label">价格竞争力</div>
+            <div class="value">86</div>
+          </div>
+          <div class="hint">主力商品低于同类中位价 7%</div>
+        </article>
+
+        <article class="card metric span-3">
+          <div>
+            <div class="label">询单转化率</div>
+            <div class="value">14.8%</div>
+          </div>
+          <div class="hint">AI 回复建议命中率 81%</div>
+        </article>
+
+        <article class="card metric span-3">
+          <div>
+            <div class="label">自动化建议</div>
+            <div class="value">32</div>
+          </div>
+          <div class="hint">全部动作需人工确认后执行</div>
+        </article>
+
+        <article class="card span-8">
+          <div class="section-head">
+            <div>
+              <div class="section-title">市场需求雷达</div>
+              <div class="section-desc">把关键词热度、供给密度和成交信号拆成趋势图，而不是堆满表格。</div>
+            </div>
+            <div class="pill blue">近 7 日</div>
+          </div>
+
+          <div class="radar-card">
+            <div class="chart-box">
+              <div class="legend">
+                <span><i style="background: var(--brand)"></i>需求热度</span>
+                <span><i style="background: var(--blue)"></i>供给密度</span>
+              </div>
+              <svg class="chart-svg" viewBox="0 0 650 220" aria-hidden="true">
+                <defs>
+                  <linearGradient id="areaA" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="#15b78f" stop-opacity="0.22" />
+                    <stop offset="1" stop-color="#15b78f" stop-opacity="0" />
+                  </linearGradient>
+                </defs>
+                <path d="M18 152 C78 130 98 112 154 118 C215 124 235 55 294 70 C354 86 380 140 442 105 C508 67 552 61 632 40 L632 210 L18 210Z" fill="url(#areaA)" />
+                <path d="M18 152 C78 130 98 112 154 118 C215 124 235 55 294 70 C354 86 380 140 442 105 C508 67 552 61 632 40" fill="none" stroke="#15b78f" stroke-width="5" stroke-linecap="round" />
+                <path d="M18 178 C88 164 126 148 172 150 C236 152 278 134 326 126 C385 116 432 128 488 99 C542 72 586 85 632 68" fill="none" stroke="#356bff" stroke-width="4" stroke-linecap="round" stroke-dasharray="8 10" />
+                <g fill="#fff" stroke="#15b78f" stroke-width="4">
+                  <circle cx="154" cy="118" r="7" />
+                  <circle cx="294" cy="70" r="7" />
+                  <circle cx="442" cy="105" r="7" />
+                  <circle cx="632" cy="40" r="7" />
+                </g>
+              </svg>
+              <div class="axis">
+                <span>周一</span><span>周二</span><span>周三</span><span>周四</span><span>周五</span><span>周六</span><span>周日</span>
+              </div>
+            </div>
+
+            <div class="mini-stack">
+              <div class="mini-card">
+                <div class="label">增长最快</div>
+                <strong>CCD 相机</strong>
+                <span>需求 +38%，竞争密度低于平均值。</span>
+              </div>
+              <div class="mini-card">
+                <div class="label">价格窗口</div>
+                <strong>428-568 元</strong>
+                <span>适合通过成色和配件拉开差异。</span>
+              </div>
+              <div class="mini-card">
+                <div class="label">建议动作</div>
+                <strong>优先上架</strong>
+                <span>生成标题、详情、标签和底价策略。</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card span-4">
+          <div class="section-head">
+            <div>
+              <div class="section-title">买家需求分栏</div>
+              <div class="section-desc">将咨询内容拆成可行动的运营信号。</div>
+            </div>
+          </div>
+          <div class="mini-stack">
+            <div class="mini-card">
+              <div class="label">高频关注</div>
+              <strong>成色 / 配件 / 包邮</strong>
+              <span>建议在详情首屏增加实拍、瑕疵说明和发货承诺。</span>
+            </div>
+            <div class="mini-card">
+              <div class="label">议价意图</div>
+              <strong>46%</strong>
+              <span>生成温和议价、强硬守价、快速成交三类回复。</span>
+            </div>
+            <div class="mini-card">
+              <div class="label">成交信号</div>
+              <strong>同城急用</strong>
+              <span>提醒卖家优先处理高转化买家。</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="card span-12">
+          <div class="section-head">
+            <div>
+              <div class="section-title">机会商品推荐</div>
+              <div class="section-desc">用卡片分开呈现商品机会，减少文件感和表格密度。</div>
+            </div>
+            <div class="pill green">机会评分模型</div>
+          </div>
+
+          <div class="opportunity-grid">
+            <div class="product-card">
+              <div class="product-top">
+                <div class="product-name">CCD 复古数码相机</div>
+                <div class="score">92</div>
+              </div>
+              <div class="meter"><span style="width: 92%"></span></div>
+              <div class="product-meta"><span>需求 +38%</span><span>建议价 428-568 元</span></div>
+            </div>
+
+            <div class="product-card">
+              <div class="product-top">
+                <div class="product-name">轻量化露营椅</div>
+                <div class="score">87</div>
+              </div>
+              <div class="meter"><span style="width: 87%"></span></div>
+              <div class="product-meta"><span>季节升温</span><span>建议价 89-139 元</span></div>
+            </div>
+
+            <div class="product-card">
+              <div class="product-top">
+                <div class="product-name">75 配列机械键盘</div>
+                <div class="score">81</div>
+              </div>
+              <div class="meter"><span style="width: 81%"></span></div>
+              <div class="product-meta"><span>询单稳定</span><span>建议价 199-299 元</span></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card span-5">
+          <div class="section-head">
+            <div>
+              <div class="section-title">AI 上架助手</div>
+              <div class="section-desc">将文案、价格和详情优化分成独立输出。</div>
+            </div>
+            <div class="pill amber">草稿</div>
+          </div>
+
+          <div class="split">
+            <div class="ai-box">
+              <div class="box-title">推荐标题</div>
+              <div class="ai-copy">Sony ZV-1 轻便 Vlog 相机，成色好，适合旅行拍摄</div>
+            </div>
+            <div class="ai-box">
+              <div class="box-title">定价策略</div>
+              <div class="ai-copy">挂牌 2,680 元，保留 2,520 元成交底价。</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card span-7">
+          <div class="section-head">
+            <div>
+              <div class="section-title">商品策略队列</div>
+              <div class="section-desc">所有自动化动作先进入审核队列，方便解释合规边界。</div>
+            </div>
+            <div class="pill green">人工确认后执行</div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>商品</th>
+                  <th>表现</th>
+                  <th>价格状态</th>
+                  <th>建议动作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="item-name">Sony ZV-1 Vlog 相机</div>
+                    <div class="item-sub">上架 11 天 · 库存 1</div>
+                  </td>
+                  <td>1,284 浏览 · 21 咨询</td>
+                  <td>低于中位价 4%</td>
+                  <td><span class="pill green">保留置顶</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="item-name">iPhone 14 128G 午夜色</div>
+                    <div class="item-sub">上架 18 天 · 库存 2</div>
+                  </td>
+                  <td>863 浏览 · 8 咨询</td>
+                  <td>高于中位价 9%</td>
+                  <td><span class="pill blue">降价 120</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="item-name">旧款筋膜枪</div>
+                    <div class="item-sub">上架 39 天 · 库存 5</div>
+                  </td>
+                  <td>142 浏览 · 0 咨询</td>
+                  <td>同类供给过高</td>
+                  <td><span class="pill" style="background: var(--red-soft); color: var(--red);">建议下架</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <article class="card span-12">
+          <div class="section-head">
+            <div>
+              <div class="section-title">后续可扩展流程</div>
+              <div class="section-desc">作品集里可以用这一区域说明你的工程规划：数据源、AI、规则引擎和审核执行。</div>
+            </div>
+          </div>
+
+          <div class="workflow">
+            <div class="step">
+              <div class="step-no">1</div>
+              <strong>数据接入</strong>
+              <p>接入授权接口、CSV 或商品 ERP，沉淀关键词、价格、浏览和咨询数据。</p>
+            </div>
+            <div class="step">
+              <div class="step-no">2</div>
+              <strong>模型分析</strong>
+              <p>计算机会分、价格区间、买家意图和商品风险信号。</p>
+            </div>
+            <div class="step">
+              <div class="step-no">3</div>
+              <strong>策略生成</strong>
+              <p>生成标题、详情、标签、回复模板和上下架建议。</p>
+            </div>
+            <div class="step">
+              <div class="step-no">4</div>
+              <strong>审核执行</strong>
+              <p>人工确认后执行动作，保留日志，后续可扩展自动化任务队列。</p>
+            </div>
+          </div>
+        </article>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
